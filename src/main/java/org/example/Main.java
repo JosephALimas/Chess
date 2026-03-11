@@ -1,17 +1,45 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.example.chess.game.ChessGame;
+import org.example.chess.game.MoveParser;
+import org.example.chess.model.Move;
+import org.example.chess.model.Piece;
+
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        ChessGame game = new ChessGame();
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        System.out.println("Chess CLI ready. Enter moves like e2e4. Type 'exit' to quit.");
+        while (true) {
+            System.out.println();
+            System.out.println(game.board().toAscii());
+            System.out.print(game.turn() + " to move > ");
+
+            if (!scanner.hasNextLine()) {
+                break;
+            }
+
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit")) {
+                break;
+            }
+
+            try {
+                Move move = MoveParser.parse(input);
+                Piece captured = game.applyMove(move);
+                if (captured == null) {
+                    System.out.println("Moved " + move.from() + " -> " + move.to());
+                } else {
+                    System.out.println("Moved " + move.from() + " -> " + move.to() + ", captured " + captured.shortName());
+                }
+            } catch (RuntimeException ex) {
+                System.out.println("Error: " + ex.getMessage());
+            }
         }
+
+        System.out.println("Bye.");
     }
 }

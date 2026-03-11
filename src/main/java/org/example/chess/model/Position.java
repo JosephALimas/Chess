@@ -26,6 +26,30 @@ public final class Position {
         return col;
     }
 
+    public int deltaRowTo(Position other) {
+        return other.row - row;
+    }
+
+    public int deltaColTo(Position other) {
+        return other.col - col;
+    }
+
+    public static Position fromAlgebraic(String value) {
+        if (value == null || value.length() != 2) {
+            throw new IllegalArgumentException("Invalid square: " + value);
+        }
+
+        char file = Character.toLowerCase(value.charAt(0));
+        char rank = value.charAt(1);
+        if (file < 'a' || file > 'h' || rank < '1' || rank > '8') {
+            throw new IllegalArgumentException("Invalid square: " + value);
+        }
+
+        int col = file - 'a';
+        int row = 8 - Character.getNumericValue(rank);
+        return Position.of(row, col);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

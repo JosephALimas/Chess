@@ -22,6 +22,37 @@ public class Board {
         return squares[position.row()][position.col()];
     }
 
+    public boolean isEmpty(Position position) {
+        return getPiece(position) == null;
+    }
+
+    public boolean isOccupied(Position position) {
+        return !isEmpty(position);
+    }
+
+    public boolean isOccupiedByColor(Position position, PieceColor color) {
+        Piece piece = getPiece(position);
+        return piece != null && piece.color() == color;
+    }
+
+    public boolean isPathClear(Position from, Position to) {
+        int rowStep = Integer.compare(to.row(), from.row());
+        int colStep = Integer.compare(to.col(), from.col());
+
+        int row = from.row() + rowStep;
+        int col = from.col() + colStep;
+
+        while (row != to.row() || col != to.col()) {
+            if (squares[row][col] != null) {
+                return false;
+            }
+            row += rowStep;
+            col += colStep;
+        }
+
+        return true;
+    }
+
     public void setPiece(Position position, Piece piece) {
         squares[position.row()][position.col()] = piece;
     }
